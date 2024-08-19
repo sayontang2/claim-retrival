@@ -1,0 +1,15 @@
+.env
+*.DS_Store
+__pycache__/
+in_data/
+logs/
+openai-ip/
+openai-op/
+out_data/
+sample_data/
+src/__pycache__
+src/main0.py
+helpers
+
+# Jupyter Notebook
+.ipynb_checkpoints

@@ -1,0 +1,51 @@
+2024-08-18 01:05:06,510 - INFO - Use pytorch device_name: cuda
+2024-08-18 01:05:06,511 - INFO - Load pretrained SentenceTransformer: sentence-transformers/use-cmlm-multilingual
+2024-08-18 01:05:08,190 - INFO - Use pytorch device_name: cuda
+2024-08-18 01:05:08,191 - INFO - Load pretrained SentenceTransformer: sentence-transformers/use-cmlm-multilingual
+2024-08-18 01:05:14,229 - INFO - Evaluation result at epoch 0:
+	   post_l1_fact_eng  post_l1_fact_orig  post_l2_fact_eng  post_l2_fact_orig
+	0              0.68               0.66              0.76               0.70
+	1              0.74               0.76              0.80               0.76
+	2              0.78               0.78              0.84               0.80
+	3              0.82               0.80              0.86               0.84
+	4              0.82               0.82              0.88               0.86
+2024-08-18 01:05:20,710 - INFO - Epoch 0: Last Batch Loss = 0.00014125017332844436
+2024-08-18 01:05:24,293 - INFO - Evaluation result at epoch 1:
+	   post_l1_fact_eng  post_l1_fact_orig  post_l2_fact_eng  post_l2_fact_orig
+	0              0.94               0.94              0.94               0.94
+	1              0.98               0.98              0.98               0.98
+	2              1.00               1.00              1.00               1.00
+	3              1.00               1.00              1.00               1.00
+	4              1.00               1.00              1.00               1.00
+2024-08-18 01:05:30,703 - INFO - Epoch 1: Last Batch Loss = 0.0018523241160437465
+2024-08-18 01:05:34,285 - INFO - Evaluation result at epoch 2:
+	   post_l1_fact_eng  post_l1_fact_orig  post_l2_fact_eng  post_l2_fact_orig
+	0              0.94               0.94              0.94               0.94
+	1              0.98               0.98              0.98               0.98
+	2              1.00               1.00              1.00               1.00
+	3              1.00               1.00              1.00               1.00
+	4              1.00               1.00              1.00               1.00
+2024-08-18 01:05:40,698 - INFO - Epoch 2: Last Batch Loss = 2.62256980931852e-05
+2024-08-18 01:05:44,276 - INFO - Evaluation result at epoch 3:
+	   post_l1_fact_eng  post_l1_fact_orig  post_l2_fact_eng  post_l2_fact_orig
+	0              0.94               0.94              0.94               0.94
+	1              0.98               0.98              0.98               0.98
+	2              1.00               1.00              1.00               1.00
+	3              1.00               1.00              1.00               1.00
+	4              1.00               1.00              1.00               1.00
+2024-08-18 01:05:50,683 - INFO - Epoch 3: Last Batch Loss = 3.170877789671067e-05
+2024-08-18 01:05:54,271 - INFO - Evaluation result at epoch 4:
+	   post_l1_fact_eng  post_l1_fact_orig  post_l2_fact_eng  post_l2_fact_orig
+	0              0.94               0.94              0.94               0.94
+	1              0.98               0.98              0.98               0.98
+	2              1.00               1.00              1.00               1.00
+	3              1.00               1.00              1.00               1.00
+	4              1.00               1.00              1.00               1.00
+2024-08-18 01:06:00,671 - INFO - Epoch 4: Last Batch Loss = 8.82144763636461e-06
+2024-08-18 01:06:04,262 - INFO - Evaluation result at epoch 5:
+	   post_l1_fact_eng  post_l1_fact_orig  post_l2_fact_eng  post_l2_fact_orig
+	0              0.94               0.94              0.94               0.94
+	1              0.98               0.98              0.98               0.98
+	2              1.00               1.00              1.00               1.00
+	3              1.00               1.00              1.00               1.00
+	4              1.00               1.00              1.00               1.00
