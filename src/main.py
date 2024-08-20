@@ -192,14 +192,14 @@ def compute_loss(anchor_repr, positive_repr, config):
 def train_one_epoch(epoch, model, optimizer, scheduler, train_loader, config):
     """Training logic for one epoch with gradient accumulation."""
     model.train()
-    loop = tqdm(train_loader, leave=True)
+    # loop = tqdm(train_loader, leave=True)
     
     # Number of steps after which gradients are accumulated
     accumulation_steps = config['accumulation_steps']
     
     optimizer.zero_grad()  # Initialize the gradients
 
-    for ix, batch in enumerate(loop):
+    for ix, batch in enumerate(train_loader):
         # Forward pass
         anchor_repr, positive_repr = forward_pass(model, batch, config)
         
@@ -222,8 +222,8 @@ def train_one_epoch(epoch, model, optimizer, scheduler, train_loader, config):
             if (config['loss_log_step'] > 0) and (((ix + 1) / accumulation_steps) % config['loss_log_step'] == 0):
                 logging.info(f'Epoch {epoch} - Step {(ix + 1) / accumulation_steps}: Loss = {loss.item() * accumulation_steps}')
     
-        loop.set_description(f'Epoch {epoch}')
-        loop.set_postfix(loss=loss.item() * accumulation_steps)  # Unscaled loss for logging
+        # loop.set_description(f'Epoch {epoch}')
+        # loop.set_postfix(loss=loss.item() * accumulation_steps)  # Unscaled loss for logging
     
     logging.info(f'Epoch {epoch}: Last Batch Loss = {loss.item() * accumulation_steps}')  # Log the last batch loss
 
