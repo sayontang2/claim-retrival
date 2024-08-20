@@ -1,3 +1,4 @@
+import argparse
 import logging
 import torch
 from torch.utils.data import DataLoader
@@ -19,12 +20,12 @@ trg_logging.set_verbosity_warning()
 import pdb
 
 
-def setup_config():
-    """Handle all configuration and hyperparameter setup."""
+def setup_config(args_dict):
 
+    # base config        
     config = {
         # Model Hyperparameters
-        'feature_type' : FeatureSet.SBERT_EXT1,
+        'feature_type' : FeatureSet.SBERT_ONLY,
         'agg_type' : AggregationMethod.LINEAR,
         'nheads' : 8, 
         'model_name' : 'sentence-transformers/use-cmlm-multilingual',
@@ -34,23 +35,23 @@ def setup_config():
         'seed' : 447,
         
         # Data Paths
-        'train_fact_path' : './in_data/fact_checks.csv',
-        'train_post_path' : './in_data/posts.csv',
-        'train_post2fact_mapping' : './in_data/fact_check_post_mapping.csv',
+        # 'train_fact_path' : './in_data/fact_checks.csv',
+        # 'train_post_path' : './in_data/posts.csv',
+        # 'train_post2fact_mapping' : './in_data/fact_check_post_mapping.csv',
 
-        'train_fact_orig_emb_path' : './openai-op/orig-fact.pkl',
-        'train_fact_eng_emb_path' : './openai-op/eng-fact.pkl',
-        'train_post_l1_emb_path' : './openai-op/l1-post.pkl',
-        'train_post_l2_emb_path' : './openai-op/l2-post.pkl',
+        # 'train_fact_orig_emb_path' : './openai-op/orig-fact.pkl',
+        # 'train_fact_eng_emb_path' : './openai-op/eng-fact.pkl',
+        # 'train_post_l1_emb_path' : './openai-op/l1-post.pkl',
+        # 'train_post_l2_emb_path' : './openai-op/l2-post.pkl',
 
-        # 'train_fact_path' : './sample_data/trial_fact_checks.csv',
-        # 'train_post_path' : './sample_data/trial_posts.csv',
-        # 'train_post2fact_mapping' : './sample_data/trial_data_mapping.csv',
+        'train_fact_path' : './sample_data/trial_fact_checks.csv',
+        'train_post_path' : './sample_data/trial_posts.csv',
+        'train_post2fact_mapping' : './sample_data/trial_data_mapping.csv',
 
-        # 'train_fact_orig_emb_path' : './openai-op/eval_orig-fact.pkl',
-        # 'train_fact_eng_emb_path' : './openai-op/eval_eng-fact.pkl',
-        # 'train_post_l1_emb_path' : './openai-op/eval_l1-post.pkl',
-        # 'train_post_l2_emb_path' : './openai-op/eval_l2-post.pkl',
+        'train_fact_orig_emb_path' : './openai-op/eval_orig-fact.pkl',
+        'train_fact_eng_emb_path' : './openai-op/eval_eng-fact.pkl',
+        'train_post_l1_emb_path' : './openai-op/eval_l1-post.pkl',
+        'train_post_l2_emb_path' : './openai-op/eval_l2-post.pkl',
 
         'eval_fact_path' : './sample_data/trial_fact_checks.csv',
         'eval_post_path' : './sample_data/trial_posts.csv',
@@ -65,9 +66,9 @@ def setup_config():
         'loss_scale' : 20,
         'train_batch_size' : 16,
         'accumulation_steps': 1,
-        'eval_batch_size' :4,
+        'eval_batch_size' :16,
         'max_seq_len' : 312,
-        'n_epochs' : 5,
+        'n_epochs' : 2,
         'wt_decay' : 1e-8,
         'lr' : 1e-4,
         'K': 5,
@@ -78,8 +79,16 @@ def setup_config():
         'model_checkpointing': False,
         'load_checkpoint': False,
         'checkpoint_path': './checkpoints/checkpoint_epoch_1.pth',
-        'loss_log_step': 5
+        'loss_log_step': -1
     }
+
+    """Handle all configuration and hyperparameter setup."""
+    args_dict['feature_type'] = FeatureSet._value2member_map_[args_dict['feature_type']]
+    args_dict['agg_type'] = AggregationMethod._value2member_map_[args_dict['agg_type']]
+
+    for k, v in args_dict.items():
+        config[k] = v
+
     return config
 
 def prepare_training_data(config, tokenizer):
@@ -233,9 +242,25 @@ def main():
     # ----------------------------------------------------
     # Configuration and argument parsing
     # ----------------------------------------------------
-    config = setup_config()
-    config['log_path'] = f'./logs/exp_seed-{config["seed"]}_feat-{config["feature_type"]}.log'
+    parser = argparse.ArgumentParser(description="Experiment Configuration")
+    parser.add_argument('--feature_type', type=int, required=True, help="FeatureSet value (1 for SBERT_ONLY, etc.)")
+    parser.add_argument('--agg_type', type=int, required=True, help="AggregationMethod value (1 for LINEAR, 2 for ATTENTION)")
+    parser.add_argument('--nheads', type=int, required=False, default=8)
+    parser.add_argument('--train_batch_size', type=int, default=16)
+    parser.add_argument('--lr', type=float, default=1e-4)
+    args = parser.parse_args()    
+    
+    # Convert argparse namespace to dictionary
+    args_dict = vars(args)
+
+    config = setup_config(args_dict)
+    if not os.path.exists(f'./logs/{config["seed"]}/'):
+        os.makedirs(f'./logs/{config["seed"]}/')
+
+    config['log_path'] = f'./logs/{config["seed"]}/f-{config["feature_type"]}_a-{config["agg_type"]}_b-{config["train_batch_size"]}_nh-{config["nheads"]}.log'
+    config['log_path'] = config['log_path'].replace('FeatureSet.', "").replace('AggregationMethod.', "")
     set_seed(config['seed'])
+    print(config)
     
     # Setup logging
     setup_logging(config['log_path'])
