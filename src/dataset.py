@@ -291,7 +291,9 @@ def create_inference_dataset(df_facts: pd.DataFrame, df_posts: pd.DataFrame, df_
 
 
 def create_train_dataset(df_facts: pd.DataFrame, df_posts: pd.DataFrame, df_mapping: pd.DataFrame, 
-                         fact_orig_emb_pth: str, fact_eng_emb_pth: str, post_l1_emb_pth: str, post_l2_emb_pth: str) -> Tuple[List[Tuple[str, str]], List[Tuple[Any, Any]], List[Tuple[Any, Any]]]:
+                         fact_orig_emb_pth: str, fact_eng_emb_pth: str,
+                         post_l1_emb_pth: str, post_l2_emb_pth: str,
+                         train_size: float = 1) -> Tuple[List[Tuple[str, str]], List[Tuple[Any, Any]], List[Tuple[Any, Any]]]:
     """
     Generates a dataset for multiple negative ranking loss training by pairing posts and facts
     with associated embeddings. The dataset includes pairs of anchor posts and positive facts,
@@ -313,6 +315,8 @@ def create_train_dataset(df_facts: pd.DataFrame, df_posts: pd.DataFrame, df_mapp
             - A list of large embedding pairs corresponding to the text pairs.
     """
     df = create_post_fact_df_with_ext_emb(df_facts, df_posts, df_mapping, fact_orig_emb_pth, fact_eng_emb_pth, post_l1_emb_pth, post_l2_emb_pth, strategy=MergeStrategy.ALL)
+    if train_size <1:
+        df = df.sample(frac = train_size, random_state=4727).reset_index(drop = True)
 
     anchor_post = []
     positive_fact = []

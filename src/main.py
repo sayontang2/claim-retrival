@@ -33,25 +33,26 @@ def setup_config(args_dict):
         'external_dim2' : 3072,
         'device' : 'cuda:0',
         'seed' : 447,
-        
+        'train_size': 1.0,      # % of full training data to be used for training
+
         # Data Paths
-        # 'train_fact_path' : './in_data/fact_checks.csv',
-        # 'train_post_path' : './in_data/posts.csv',
-        # 'train_post2fact_mapping' : './in_data/fact_check_post_mapping.csv',
+        'train_fact_path' : './in_data/fact_checks.csv',
+        'train_post_path' : './in_data/posts.csv',
+        'train_post2fact_mapping' : './in_data/fact_check_post_mapping.csv',
 
-        # 'train_fact_orig_emb_path' : './openai-op/orig-fact.pkl',
-        # 'train_fact_eng_emb_path' : './openai-op/eng-fact.pkl',
-        # 'train_post_l1_emb_path' : './openai-op/l1-post.pkl',
-        # 'train_post_l2_emb_path' : './openai-op/l2-post.pkl',
+        'train_fact_orig_emb_path' : './openai-op/orig-fact.pkl',
+        'train_fact_eng_emb_path' : './openai-op/eng-fact.pkl',
+        'train_post_l1_emb_path' : './openai-op/l1-post.pkl',
+        'train_post_l2_emb_path' : './openai-op/l2-post.pkl',
 
-        'train_fact_path' : './sample_data/trial_fact_checks.csv',
-        'train_post_path' : './sample_data/trial_posts.csv',
-        'train_post2fact_mapping' : './sample_data/trial_data_mapping.csv',
+        # 'train_fact_path' : './sample_data/trial_fact_checks.csv',
+        # 'train_post_path' : './sample_data/trial_posts.csv',
+        # 'train_post2fact_mapping' : './sample_data/trial_data_mapping.csv',
 
-        'train_fact_orig_emb_path' : './openai-op/eval_orig-fact.pkl',
-        'train_fact_eng_emb_path' : './openai-op/eval_eng-fact.pkl',
-        'train_post_l1_emb_path' : './openai-op/eval_l1-post.pkl',
-        'train_post_l2_emb_path' : './openai-op/eval_l2-post.pkl',
+        # 'train_fact_orig_emb_path' : './openai-op/eval_orig-fact.pkl',
+        # 'train_fact_eng_emb_path' : './openai-op/eval_eng-fact.pkl',
+        # 'train_post_l1_emb_path' : './openai-op/eval_l1-post.pkl',
+        # 'train_post_l2_emb_path' : './openai-op/eval_l2-post.pkl',
 
         'eval_fact_path' : './sample_data/trial_fact_checks.csv',
         'eval_post_path' : './sample_data/trial_posts.csv',
@@ -103,7 +104,8 @@ def prepare_training_data(config, tokenizer):
     an_po_pair_dataset, an_po_small_ext_emb, an_po_large_ext_emb = create_train_dataset(
                                                                         facts, posts, post2fact_mapping,
                                                                         config['train_fact_orig_emb_path'], config['train_fact_eng_emb_path'],
-                                                                        config['train_post_l1_emb_path'], config['train_post_l2_emb_path']
+                                                                        config['train_post_l1_emb_path'], config['train_post_l2_emb_path'],
+                                                                        config['train_size']
                                                                     )
     dataset = PairDatasetWithEmbeddings_for_train(an_po_pair_dataset, tokenizer, an_po_small_ext_emb, an_po_large_ext_emb)
     return dataset
@@ -192,14 +194,14 @@ def compute_loss(anchor_repr, positive_repr, config):
 def train_one_epoch(epoch, model, optimizer, scheduler, train_loader, config):
     """Training logic for one epoch with gradient accumulation."""
     model.train()
-    # loop = tqdm(train_loader, leave=True)
+    loop = tqdm(train_loader, leave=True)
     
     # Number of steps after which gradients are accumulated
     accumulation_steps = config['accumulation_steps']
     
     optimizer.zero_grad()  # Initialize the gradients
 
-    for ix, batch in enumerate(train_loader):
+    for ix, batch in enumerate(loop):
         # Forward pass
         anchor_repr, positive_repr = forward_pass(model, batch, config)
         
@@ -222,8 +224,8 @@ def train_one_epoch(epoch, model, optimizer, scheduler, train_loader, config):
             if (config['loss_log_step'] > 0) and (((ix + 1) / accumulation_steps) % config['loss_log_step'] == 0):
                 logging.info(f'Epoch {epoch} - Step {(ix + 1) / accumulation_steps}: Loss = {loss.item() * accumulation_steps}')
     
-        # loop.set_description(f'Epoch {epoch}')
-        # loop.set_postfix(loss=loss.item() * accumulation_steps)  # Unscaled loss for logging
+        loop.set_description(f'Epoch {epoch}')
+        loop.set_postfix(loss=loss.item() * accumulation_steps)  # Unscaled loss for logging
     
     logging.info(f'Epoch {epoch}: Last Batch Loss = {loss.item() * accumulation_steps}')  # Log the last batch loss
 
@@ -246,18 +248,18 @@ def main():
     parser.add_argument('--feature_type', type=int, required=True, help="FeatureSet value (1 for SBERT_ONLY, etc.)")
     parser.add_argument('--agg_type', type=int, required=True, help="AggregationMethod value (1 for LINEAR, 2 for ATTENTION)")
     parser.add_argument('--nheads', type=int, required=False, default=8)
-    parser.add_argument('--train_batch_size', type=int, default=16)
-    parser.add_argument('--lr', type=float, default=1e-4)
+    parser.add_argument('--train_size', type=float, default=1.0)
     args = parser.parse_args()    
     
     # Convert argparse namespace to dictionary
     args_dict = vars(args)
 
     config = setup_config(args_dict)
-    if not os.path.exists(f'./logs/{config["seed"]}/'):
-        os.makedirs(f'./logs/{config["seed"]}/')
+    log_folder_path = f'./logs/{config["seed"]}-{int(config["train_size"]*100)}/'
+    if not os.path.exists(log_folder_path):
+        os.makedirs(log_folder_path)
 
-    config['log_path'] = f'./logs/{config["seed"]}/f-{config["feature_type"]}_a-{config["agg_type"]}_b-{config["train_batch_size"]}_nh-{config["nheads"]}.log'
+    config['log_path'] = f'{log_folder_path}/f-{config["feature_type"]}_a-{config["agg_type"]}_b-{config["train_batch_size"]}_nh-{config["nheads"]}.log'
     config['log_path'] = config['log_path'].replace('FeatureSet.', "").replace('AggregationMethod.', "")
     set_seed(config['seed'])
     print(config)
