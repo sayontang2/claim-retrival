@@ -9,7 +9,7 @@ out_data/
 sample_data/
 src/__pycache__
 src/main0.py
-helpers
+helpers/modelling.ipynb
 
 # Jupyter Notebook
 .ipynb_checkpoints
