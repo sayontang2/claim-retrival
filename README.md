@@ -92,10 +92,10 @@ Before running the experiments, ensure that you have the following data folders 
 3. **`./openai-op`**  
    Download the `openai-op` folder from [url-3].  
    This folder contains OpenAI embeddings for both training and evaluation data, including:
-   - `orig-fact.pkl`
-   - `eng-fact.pkl`
-   - `l1-post.pkl`
-   - `l2-post.pkl`
+   - `{eval_}orig-fact.pkl`
+   - `{eval_}eng-fact.pkl`
+   - `{eval_}l1-post.pkl`
+   - `{eval_}l2-post.pkl`
 
 ## Code Structure
 
