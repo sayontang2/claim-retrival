@@ -32,7 +32,7 @@ def setup_config(args_dict):
         'external_dim1' : 1536, 
         'external_dim2' : 3072,
         'device' : 'cuda:0',
-        'seed' : 447,
+        'seed' : 557,
         'train_size': 1.0,      # % of full training data to be used for training
 
         # Data Paths
@@ -100,6 +100,23 @@ def prepare_training_data(config, tokenizer):
     facts = process_facts_df(facts)
     posts = process_posts_df(posts)
     
+    # Removing any training data that may overlap with evaluation data
+    eval_posts, eval_facts, eval_post2fact_mapping = prepare_eval_data(config)
+
+    eval_post_ids = eval_posts.post_instances.apply(lambda x: x[0][0])
+    tr_post_ids = posts.post_instances.apply(lambda x: x[0][0])
+    tr_posts_id_in_eval = posts.loc[tr_post_ids.isin(eval_post_ids)].post_id.tolist()
+
+    eval_fact_ids = eval_facts.fact_instances.apply(lambda x: x[0][0])
+    tr_fact_ids = facts.fact_instances.apply(lambda x: x[0][0])
+    tr_facts_id_in_eval = facts.loc[tr_fact_ids.isin(eval_fact_ids)].fact_check_id.tolist()
+
+    facts = facts.loc[~facts.fact_check_id.isin(tr_facts_id_in_eval)]
+    posts = posts.loc[~posts.post_id.isin(tr_posts_id_in_eval)]
+
+    post2fact_mapping = post2fact_mapping.loc[~post2fact_mapping.fact_check_id.isin(tr_facts_id_in_eval)]
+    post2fact_mapping = post2fact_mapping.loc[~post2fact_mapping.post_id.isin(tr_posts_id_in_eval)]
+
     # Create dataset
     an_po_pair_dataset, an_po_small_ext_emb, an_po_large_ext_emb = create_train_dataset(
                                                                         facts, posts, post2fact_mapping,
@@ -194,14 +211,15 @@ def compute_loss(anchor_repr, positive_repr, config):
 def train_one_epoch(epoch, model, optimizer, scheduler, train_loader, config):
     """Training logic for one epoch with gradient accumulation."""
     model.train()
-    loop = tqdm(train_loader, leave=True)
+    # loop = tqdm(train_loader, leave=True)
     
     # Number of steps after which gradients are accumulated
     accumulation_steps = config['accumulation_steps']
     
     optimizer.zero_grad()  # Initialize the gradients
 
-    for ix, batch in enumerate(loop):
+    for ix, batch in enumerate(train_loader):
+    # for ix, batch in enumerate(loop):
         # Forward pass
         anchor_repr, positive_repr = forward_pass(model, batch, config)
         
@@ -224,8 +242,8 @@ def train_one_epoch(epoch, model, optimizer, scheduler, train_loader, config):
             if (config['loss_log_step'] > 0) and (((ix + 1) / accumulation_steps) % config['loss_log_step'] == 0):
                 logging.info(f'Epoch {epoch} - Step {(ix + 1) / accumulation_steps}: Loss = {loss.item() * accumulation_steps}')
     
-        loop.set_description(f'Epoch {epoch}')
-        loop.set_postfix(loss=loss.item() * accumulation_steps)  # Unscaled loss for logging
+        # loop.set_description(f'Epoch {epoch}')
+        # loop.set_postfix(loss=loss.item() * accumulation_steps)  # Unscaled loss for logging
     
     logging.info(f'Epoch {epoch}: Last Batch Loss = {loss.item() * accumulation_steps}')  # Log the last batch loss
 
