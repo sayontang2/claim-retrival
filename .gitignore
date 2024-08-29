@@ -1,10 +1,12 @@
 .env
 *.DS_Store
+*.log
 __pycache__/
 in_data/
 logs/
 openai-ip/
 openai-op/
+openai-op-small/
 out_data/
 sample_data/
 src/__pycache__

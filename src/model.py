@@ -86,8 +86,10 @@ class ModifiedSentenceTransformer(SentenceTransformer):
         super(ModifiedSentenceTransformer, self).__init__(model_name)
         self.sbert = SentenceTransformer(model_name)
         self.target_dim = self.sbert.get_sentence_embedding_dimension()
+
         self.linear_ext1 = nn.Linear(external_dim1, self.target_dim)
         self.linear_ext2 = nn.Linear(external_dim2, self.target_dim)
+        
         self.feature_set = feature_set
         self.aggregation_method = aggregation_method
         
@@ -128,13 +130,13 @@ class ModifiedSentenceTransformer(SentenceTransformer):
             attn_output = self.attention(query, key_value, key_value)
             # Final linear projection
             final_embedding = self.final_linear(attn_output.squeeze(1))
+        
         else:  # LINEAR
             concatenated_embedding = torch.cat(embeddings, dim=-1)
             final_embedding = self.final_linear(concatenated_embedding)
         
         return final_embedding
     
-
 def calculate_mean_of_weights(model):
     """Calculate the mean of all the parameter weights in a model."""
     total_sum = 0.0

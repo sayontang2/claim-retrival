@@ -73,24 +73,26 @@ The experimental configurations in this project are set up within the `main.py` 
 
 ## Data Setup
 
-Before running the experiments, ensure that you have the following data folders in your project directory:
+Before running the experiments, ensure that you have the following data folders in your project directory:<br>
+**<span style="color: red;"><strong>⚠️</strong> These datasets can be used for research purposes ONLY.</span>**<br>
 
 1. **`/in_data`**  
-   Download the `in_data` folder from [url-1].  
+
+   Download the `in_data` folder from [url-1](https://drive.google.com/drive/folders/1nyabTVIPb09ti3r1_NSXGy1E6bscO9Hw?usp=sharing).  
    This folder contains the training data, including:
    - `fact_checks.csv`
    - `posts.csv`
    - `fact_check_post_mapping.csv`
 
 2. **`/sample_data`**  
-   Download the `sample_data` folder from [url-2].  
+   Download the `sample_data` folder from [url-2](https://drive.google.com/drive/folders/1pC6YqG4IK8sHGXFUALfnJJBq0nqncbVP?usp=sharing).  
    This folder contains the sample evaluation data, including:
    - `trial_fact_checks.csv`
    - `trial_posts.csv`
    - `trial_data_mapping.csv`
 
 3. **`./openai-op`**  
-   Download the `openai-op` folder from [url-3].  
+   Download the `openai-op` folder from [url-3](https://drive.google.com/drive/folders/1PfpXSUp4J4HqkQo6IPa9OMRtvchlJO3u?usp=sharing).  
    This folder contains OpenAI embeddings for both training and evaluation data, including:
    - `{eval_}orig-fact.pkl`
    - `{eval_}eng-fact.pkl`

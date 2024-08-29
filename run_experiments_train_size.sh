@@ -3,10 +3,10 @@
 # Define the FeatureSet, AggregationMethod, and training_data_size enum values (using integer values)
 feature_types=(1 2 3 4)  # 1 for SBERT_ONLY, 2 for SBERT_EXT1, etc.
 agg_types=(1 2)  # 1 for LINEAR, 2 for ATTENTION
-train_sizes=(0.01 0.05 0.1)  # Different fractions of the training data to use
+train_sizes=(0.01 0.05 0.1 0.3 0.5)  # Different fractions of the training data to use
 
 # nheads values only relevant for ATTENTION (agg_type=2)
-nheads_list=(4 8)
+nheads_list=(4)
 
 # Loop over all combinations of parameters
 for feature_type in "${feature_types[@]}"; do
