@@ -52,7 +52,7 @@ It has five fields:
 ## Running the code
 Clone the git repo of the project
 ```
-git@github.com:sayontang2/claim-retrival.git
+git@github.com:sandbox-quantum/Mlingual-claim-retrival.git
 ```
 
 Create the conda environment with the requirement packages needed to run the code. Assume the name of your virtual environment is ```semeval```
@@ -84,19 +84,7 @@ Before running the experiments, ensure that you have the following data folders 
   - `fact_checks.csv`
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -122,19 +110,7 @@ Before running the experiments, ensure that you have the following data folders 
    - `posts.csv`
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -159,21 +135,8 @@ Before running the experiments, ensure that you have the following data folders 
 </table>
 </div>
 
-   - `fact_check_post_mapping.csv`
+  - `fact_check_post_mapping.csv`
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -207,19 +170,7 @@ Before running the experiments, ensure that you have the following data folders 
   - `{eval_}orig-fact.pkl`: External embedding for the facts in the original language.
 
    <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -249,19 +200,7 @@ Before running the experiments, ensure that you have the following data folders 
    - `{eval_}eng-fact.pkl`: External embedding for the facts in the english language.
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -291,19 +230,7 @@ Before running the experiments, ensure that you have the following data folders 
    - `{eval_}l1-post.pkl`: External embedding for the posts in the original language.
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -333,19 +260,7 @@ Before running the experiments, ensure that you have the following data folders 
    - `{eval_}l2-post.pkl`: External embedding for the posts in the english language.
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
