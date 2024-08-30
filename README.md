@@ -74,15 +74,123 @@ The experimental configurations in this project are set up within the `main.py` 
 ## Data Setup
 
 Before running the experiments, ensure that you have the following data folders in your project directory:<br>
-**<span style="color: red;"><strong>⚠️</strong> These datasets can be used for research purposes ONLY.</span>**<br>
+**<span style="color: red;"><strong>⚠️</strong> As per the original MultiClaim data owner request, these datasets should be used for research purposes ONLY.</span>**<br>
 
 1. **`/in_data`**  
 
-   Download the `in_data` folder from [url-1](https://drive.google.com/drive/folders/1nyabTVIPb09ti3r1_NSXGy1E6bscO9Hw?usp=sharing).  
-   This folder contains the training data, including:
-   - `fact_checks.csv`
+   Download the Multiclaim Data and place the content (see below) in `in_data` folder.
+   The data can be requested at [url-1](https://zenodo.org/records/7737983).  
+   This folder contains the training data, with the following components (see the snapshot of their sample):
+  - `fact_checks.csv`
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fact_check_id</th>
+      <th>claim</th>
+      <th>instances</th>
+      <th>title</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>205750</th>
+      <td>205750</td>
+      <td>('🕋🗃ABRIMOS A CAIXA PRETA DO BNDES.........\n✅...</td>
+      <td>[(1574899140.0, 'https://projetocomprova.com.b...</td>
+      <td>('Post mistura dados verdadeiros com números i...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
    - `posts.csv`
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>post_id</th>
+      <th>instances</th>
+      <th>ocr</th>
+      <th>verdicts</th>
+      <th>text</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>28088</th>
+      <td>28088</td>
+      <td>[(1645828783.0, 'fb')]</td>
+      <td>[('Voiko rokotteen mRNA jäädä osaksi ihmisen\n...</td>
+      <td>['False information']</td>
+      <td>('🧪 Tänään 25.2.2022 julkaistu tutkimus osoitt...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
    - `fact_check_post_mapping.csv`
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fact_check_id</th>
+      <th>post_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>31301</th>
+      <td>205728</td>
+      <td>2670</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 2. **`/sample_data`**  
    Download the `sample_data` folder from [url-2](https://drive.google.com/drive/folders/1pC6YqG4IK8sHGXFUALfnJJBq0nqncbVP?usp=sharing).  
@@ -93,7 +201,7 @@ Before running the experiments, ensure that you have the following data folders 
 
 3. **`./openai-op`**  
    Download the `openai-op` folder from [url-3](https://drive.google.com/drive/folders/1PfpXSUp4J4HqkQo6IPa9OMRtvchlJO3u?usp=sharing).  
-   This folder contains OpenAI embeddings for of the posts & facts in both training and evaluation data. If you change the fact or the post training (or eval) data, then you would need to store the openai (small & large) embeddings for each post/facts as they are neededed for model training and evaluation. The primary key for the post embedding file is ```post_id```, and for facts is ```fact_check_id```.<br>
+   This folder contains OpenAI embeddings for of the posts & facts in both training and evaluation data. If you change the fact or the post training (or eval) data, then you would need to get & store the openai (small & large) embeddings for each post/facts as they are neededed for model training and evaluation. The primary key for the post embedding file is ```post_id```, and for facts is ```fact_check_id```.<br>
    Below are the description of the embedding files for the post & facts along with their format (along with a sample) of the embedding files that the codebase assumes.
 
   - `{eval_}orig-fact.pkl`: External embedding for the facts in the original language.
