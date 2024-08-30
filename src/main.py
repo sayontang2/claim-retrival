@@ -71,7 +71,7 @@ def setup_config(args_dict):
         'max_seq_len' : 312,
         'n_epochs' : 2,
         'wt_decay' : 1e-8,
-        'lr' : 1e-4,
+        'lr' : 5e-5,
         'K': 5,
 
         # Logging & Saving

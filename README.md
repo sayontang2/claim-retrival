@@ -93,11 +93,176 @@ Before running the experiments, ensure that you have the following data folders 
 
 3. **`./openai-op`**  
    Download the `openai-op` folder from [url-3](https://drive.google.com/drive/folders/1PfpXSUp4J4HqkQo6IPa9OMRtvchlJO3u?usp=sharing).  
-   This folder contains OpenAI embeddings for both training and evaluation data, including:
-   - `{eval_}orig-fact.pkl`
-   - `{eval_}eng-fact.pkl`
-   - `{eval_}l1-post.pkl`
-   - `{eval_}l2-post.pkl`
+   This folder contains OpenAI embeddings for of the posts & facts in both training and evaluation data. If you change the fact or the post training (or eval) data, then you would need to store the openai (small & large) embeddings for each post/facts as they are neededed for model training and evaluation. The primary key for the post embedding file is ```post_id```, and for facts is ```fact_check_id```.<br>
+   Below are the description of the embedding files for the post & facts along with their format (along with a sample) of the embedding files that the codebase assumes.
+
+  - `{eval_}orig-fact.pkl`: External embedding for the facts in the original language.
+
+   <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gpt_large_emb</th>
+      <th>fact_check_id</th>
+      <th>gpt_small_emb</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>[-0.037123244, 0.032046806000000004, 0.0028377...</td>
+      <td>0</td>
+      <td>[-0.022125114, 0.020478178, 0.05030176, -0.035...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>[0.0037702448, -0.007277449, -0.01597127, 0.04...</td>
+      <td>1</td>
+      <td>[-0.0033078135000000003, -0.033126075000000005...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+   - `{eval_}eng-fact.pkl`: External embedding for the facts in the english language.
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gpt_large_emb</th>
+      <th>fact_check_id</th>
+      <th>gpt_small_emb</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>[-0.037099230000000004, 0.032050557, 0.0028363...</td>
+      <td>0</td>
+      <td>[-0.022196062000000003, 0.020639786, 0.0502345...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>[0.0037702448, -0.007277449, -0.01597127, 0.04...</td>
+      <td>1</td>
+      <td>[-0.0033078135000000003, -0.033126075000000005...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+   - `{eval_}l1-post.pkl`: External embedding for the posts in the original language.
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gpt_large_emb</th>
+      <th>post_id</th>
+      <th>gpt_small_emb</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>[-0.049027223, 0.0017845220000000002, -0.00299...</td>
+      <td>0</td>
+      <td>[0.015664421, -0.030023474, -0.006704847000000...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>[0.03373469, -0.024850484000000003, -0.0168357...</td>
+      <td>1</td>
+      <td>[0.021449845000000002, 0.009177259, 0.03826949...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+   - `{eval_}l2-post.pkl`: External embedding for the posts in the english language.
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gpt_large_emb</th>
+      <th>post_id</th>
+      <th>gpt_small_emb</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>[-0.05174981, -0.026620992000000003, -0.009032...</td>
+      <td>0</td>
+      <td>[0.010608910000000001, -0.01751335, 0.00185764...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>[0.033766627, -0.024819104, -0.016804272000000...</td>
+      <td>1</td>
+      <td>[0.021118093, 0.0089649875, 0.03777282, 0.0688...</td>
+    </tr>
+  </tbody>
+</table>
+</div>   
 
 ## Code Structure
 
